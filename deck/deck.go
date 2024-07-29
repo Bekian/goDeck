@@ -45,6 +45,7 @@ func (d *Deck) deal(amt int) Deck {
 	}
 	// remove the items from the original deck
 	d.cards = d.cards[:d.cardCount-amt]
+	d.cardCount -= amt
 	// return the new deck
 	return Deck{cards: newDeck, cardCount: amt}
 }
@@ -69,7 +70,9 @@ func (d *Deck) compareDeck(other *Deck) bool {
 func (d *Deck) combine(otherDeck *Deck) (err error) {
 	// ensure total length of deck is not greater than 52
 	if d.cardCount+otherDeck.cardCount > 52 {
-		return errors.New("Total card count too high")
+		new_amt := d.cardCount+otherDeck.cardCount
+		errorString := fmt.Sprintf("Total card count too high, amount: %d", new_amt)
+		return errors.New(errorString)
 	}
 	// compare the decks to ensure they dont have one or more of the same cards in both decks
 	if d.compareDeck(otherDeck) {
@@ -93,15 +96,17 @@ func (d *Deck) shuffle() {
 }
 
 func main() {
+	// init deck
 	deck := initDeck()
 	deck.print()
-
+	// shuffle deck
 	deck.shuffle()
 	deck.print()
-
+	// deal cards from the deck to a hand
 	hand := deck.deal(5)
 	hand.print()
 	deck.print()
+	// combine the hand back into the main deck
 	err := deck.combine(&hand)
 	if err != nil {
 		fmt.Println(err)
