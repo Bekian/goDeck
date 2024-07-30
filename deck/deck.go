@@ -6,22 +6,43 @@ import (
 	"math/rand/v2"
 )
 
+// card struct makes up a deck
+type Card struct {
+	rank 	int 	// 1-13 card's value within the suit
+	suit 	string 	// hearts, clubs, diamonds, spades
+	id 		int 	// 1-52 position in an unshuffled deck
+	flipped bool 	// whether or not the specific card is flipped
+}
+
 // idiomatic deck struct
 // has methods for dealing, shuffling, and printing the deck
 type Deck struct {
-	cards     []int
+	cards     []Card
 	cardCount int
+}
+
+// flips a single card
+func (c *Card) flipCard() {
+	c.flipped = !c.flipped
+}
+// flips a whole deck
+func (d *Deck) flipDeck() {
+	for _, card := range d.cards {
+		card.flipCard()
+	}
 }
 
 //Think: is there an instance where a deck should be created that has card values and is not length 52?
 
-// create a zeroed deck of size amt
+// TODO: this function needs to be refactored
+// create a zeroed deck of size amt 
 func initZeroedDeck(amt int) Deck {
 	// create a zeroed slice who is of length `amt` but cannot exceed the size of 52
 	deck := make([]int, amt, 52)
 	return Deck{cards: deck, cardCount: amt}
 }
 
+// TODO: this function needs to be refactored
 // create a full deck
 func initDeck() Deck {
 	deck := make([]int, 52, 52)
@@ -35,6 +56,7 @@ func (d *Deck) print() {
 	fmt.Println(d.cards)
 }
 
+// TODO: this function needs to be refactored
 // removes an amt items from the top of the deck into a new deck
 func (d *Deck) deal(amt int) Deck {
 	// make a new deck of size amt
@@ -50,6 +72,7 @@ func (d *Deck) deal(amt int) Deck {
 	return Deck{cards: newDeck, cardCount: amt}
 }
 
+// TODO: this function needs to be refactored
 func (d *Deck) compareDeck(other *Deck) bool {
 	itemMap := make(map[int]bool)
 
@@ -66,6 +89,7 @@ func (d *Deck) compareDeck(other *Deck) bool {
 	return false
 }
 
+// TODO: this function needs to be refactored
 // merges 2 decks into one
 func (d *Deck) combine(otherDeck *Deck) (err error) {
 	// ensure total length of deck is not greater than 52
